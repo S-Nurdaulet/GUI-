@@ -1,0 +1,68 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+public class LibraryGUI {
+
+    private ArrayList<String> books = new ArrayList<>();
+    private DefaultListModel<String> listModel = new DefaultListModel<>();
+
+    public LibraryGUI() {
+        JFrame frame = new JFrame("Library System");
+        frame.setSize(400, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JTextField textField = new JTextField(15);
+        JButton addButton = new JButton("Add");
+        JButton deleteButton = new JButton("Delete");
+        JButton searchButton = new JButton("Search");
+
+        JList<String> bookList = new JList<>(listModel);
+
+        // Add
+        addButton.addActionListener(e -> {
+            String book = textField.getText();
+            if (!book.isEmpty()) {
+                books.add(book);
+                listModel.addElement(book);
+                textField.setText("");
+            }
+        });
+
+        // Delete
+        deleteButton.addActionListener(e -> {
+            int index = bookList.getSelectedIndex();
+            if (index != -1) {
+                books.remove(index);
+                listModel.remove(index);
+            }
+        });
+
+        // Search
+        searchButton.addActionListener(e -> {
+            String query = textField.getText().toLowerCase();
+            for (int i = 0; i < books.size(); i++) {
+                if (books.get(i).toLowerCase().contains(query)) {
+                    bookList.setSelectedIndex(i);
+                    break;
+                }
+            }
+        });
+
+        JPanel panel = new JPanel();
+        panel.add(textField);
+        panel.add(addButton);
+        panel.add(deleteButton);
+        panel.add(searchButton);
+
+        frame.add(panel, BorderLayout.NORTH);
+        frame.add(new JScrollPane(bookList), BorderLayout.CENTER);
+
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new LibraryGUI();
+    }
+}
